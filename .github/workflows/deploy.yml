@@ -1,0 +1,124 @@
+name: Deploy to Server
+
+on:
+  pull_request:
+    types: [closed] # Trigger on PR merge
+    branches:
+      - main
+      - dev
+
+jobs:
+  # Job for dependency submission
+  dependency-submission:
+    runs-on: ubuntu-latest # Default runner provided by GitHub
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js and pnpm
+        run: |
+          sudo apt update -y
+          sudo apt install nodejs npm -y
+          npm install -g pnpm
+      # Automatically detect and report build-time dependencies
+      - name: Submit Dependencies
+        run: |
+          echo "Submitting build-time dependencies for ecosystem..."
+          pnpm install || { echo "pnpm install failed"; exit 1; }
+
+  # Job for deployment
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest # Use the default GitHub runner for deployment
+
+    steps:
+      # Checkout your repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+
+      # Set up SSH key for deployment
+      - name: Set up SSH key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+      # Deploy to your server
+      - name: Deploy to Server
+        env:
+          BRANCH_NAME: ${{ github.ref_name }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          # Determine port based on branch
+          if [ "$BRANCH_NAME" = "dev" ]; then
+            PORT=5178
+          elif [ "$BRANCH_NAME" = "main" ]; then
+            PORT=5177
+          else
+            echo "Unsupported branch: $BRANCH_NAME" && exit 1
+          fi
+          # Set environment variables based on branch
+          VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+          VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+          # Set up SSH key
+          mkdir -p ~/.ssh
+          echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          # SSH into the server and deploy
+          ssh -t -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_HOST << EOF
+            # Ensure correct permissions for the repository directory
+            sudo chown -R $SERVER_USER:$SERVER_USER /home/$SERVER_USER/websites/circle-$BRANCH_NAME
+            sudo chmod -R 755 /home/$SERVER_USER/websites/circle-$BRANCH_NAME
+            sudo find /home/$SERVER_USER/websites/circle-$BRANCH_NAME -type f -exec chmod +rw {} \;
+            # Remove existing circle directory
+            if [ -d "/home/$SERVER_USER/websites/circle-$BRANCH_NAME" ]; then
+              echo "Removing existing circle directory..."
+              echo "$SUDO_PASSWORD" | sudo -S rm -rf /home/$SERVER_USER/websites/circle-$BRANCH_NAME || { echo "Failed to remove directory"; exit 1; }
+            fi
+            # Clone the repository using SSH
+            echo "Cloning the repository branch: $BRANCH_NAME..."
+            git clone --branch $BRANCH_NAME git@github.com:Thimote147/circle.git /home/$SERVER_USER/websites/circle-$BRANCH_NAME || { echo "Git clone failed"; exit 1; }
+            # Set permissions for the repository
+            sudo chown -R $SERVER_USER:$SERVER_USER /home/$SERVER_USER/websites/circle-$BRANCH_NAME
+            sudo chmod -R 755 /home/$SERVER_USER/websites/circle-$BRANCH_NAME
+                        
+            # Create the .env file for environment variables
+            echo "VITE_SUPABASE_URL=$VITE_SUPABASE_URL" > /home/$SERVER_USER/websites/circle-$BRANCH_NAME/.env
+            echo "VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY" >> /home/$SERVER_USER/websites/circle-$BRANCH_NAME/.env
+            # Remove existing Docker container if exists
+            if docker ps -a --format '{{.Names}}' | grep -q "circle-app-$BRANCH_NAME"; then
+              docker stop circle-app-$BRANCH_NAME || true
+              docker rm -f circle-app-$BRANCH_NAME || true
+            else
+              echo "Container circle-app-$BRANCH_NAME does not exist."
+            fi
+            # Clean up old Docker images
+            docker image prune -f
+            docker builder prune -f --all
+            # Build and run the Docker container
+            cd /home/$SERVER_USER/websites/circle-$BRANCH_NAME
+            if [ "$BRANCH_NAME" = "dev" ]; then
+              docker build --no-cache --build-arg BRANCH_NAME=dev -t circle-app-$BRANCH_NAME . || { echo "Docker build failed"; exit 1; }
+            else
+              docker build --no-cache --build-arg BRANCH_NAME=prod -t circle-app-$BRANCH_NAME . || { echo "Docker build failed"; exit 1; }
+            fi
+            # For prod, use the default dist folder (dist)
+            docker cp /home/$SERVER_USER/websites/circle/dist/. circle:/usr/share/nginx/html
+            echo "Running Docker container #circle-app-$BRANCH_NAME at port $PORT..."
+            docker run -d --name circle-app-$BRANCH_NAME --restart unless-stopped -p "$PORT:80" --env-file .env circle-app-$BRANCH_NAME || { echo "Docker run failed"; exit 1; }
+          EOF

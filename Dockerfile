@@ -8,13 +8,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies (use npm ci for better reliability)
-RUN pnpm install
+RUN npm ci
 
 # Copy the rest of the application code
 COPY . .
 
+# Verify vite is installed (optional for debugging)
+RUN ls -la node_modules/.bin/  # This will list executables, including vite
+
 # Build the application
-RUN pnpm run build
+RUN npm run build
 
 # Stage 2: Serve the React app using Nginx
 FROM nginx:stable-alpine
