@@ -104,5 +104,5 @@ jobs:
             # For prod, use the default dist folder (dist)
             docker cp /home/$SERVER_USER/websites/circle/dist/. circle:/usr/share/nginx/html
             echo "Running Docker container #circle-app-$BRANCH_NAME at port $PORT..."
-            docker run -d --name circle-app-$BRANCH_NAME --restart unless-stopped -p "$PORT:80" --env-file .env circle-app-$BRANCH_NAME || { echo "Docker run failed"; exit 1; }
+            docker run -d --name circle-app-$BRANCH_NAME --restart unless-stopped -p "$PORT:3000" circle-app-$BRANCH_NAME || { echo "Docker run failed"; exit 1; }
           EOF
