@@ -1,38 +1,33 @@
-# Stage 1: Build the React app
+# Étape 1 : Build de l'application Next.js
 FROM node:20 AS builder
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml
+# Copier les fichiers nécessaires pour l'installation
 COPY package.json pnpm-lock.yaml ./
 
-# Install pnpm
+# Installer pnpm
 RUN npm install -g pnpm
 
-# Install dependencies using pnpm
-RUN pnpm install
+# Installer les dépendances sans les packages inutiles
+RUN pnpm install --frozen-lockfile
 
-# Copy the rest of the application code
+# Copier tout le code source
 COPY . .
 
-# Verify vite is installed (optional for debugging)
-RUN ls -la node_modules/.bin/  # This will list executables, including vite
-
-# Build the application
+# Build de Next.js
 RUN pnpm run build
 
-# Stage 2: Serve the React app using Nginx
-FROM nginx:stable-alpine
+# Étape 2 : Démarrer le serveur Next.js
+FROM node:20-alpine
 
-# Copy the custom nginx.conf file to the container
-COPY nginx.conf /etc/nginx/nginx.conf
+WORKDIR /app
 
-# Copy the built application from the builder stage
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copier les fichiers nécessaires au runtime
+COPY --from=builder /app ./
 
-# Expose the port on which Nginx will serve the app
-EXPOSE 80
+# Exposer le port de Next.js
+EXPOSE 3000
 
-# Run Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Commande pour démarrer Next.js en mode serveur
+CMD ["pnpm", "run", "start"]
