@@ -1,11 +1,9 @@
 name: Deploy to Server
 
 on:
-  pull_request:
-    types: [closed] # Trigger on PR merge
+  push:
     branches:
       - main
-      - dev
 
 jobs:
   # Job for dependency submission
@@ -61,10 +59,7 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
         run: |
-          # Determine port based on branch
-          if [ "$BRANCH_NAME" = "dev" ]; then
-            PORT=5178
-          elif [ "$BRANCH_NAME" = "main" ]; then
+          if [ "$BRANCH_NAME" = "main" ]; then
             PORT=5177
           else
             echo "Unsupported branch: $BRANCH_NAME" && exit 1
@@ -104,11 +99,8 @@ jobs:
             docker builder prune -f --all
             # Build and run the Docker container
             cd /home/$SERVER_USER/websites/circle-$BRANCH_NAME
-            if [ "$BRANCH_NAME" = "dev" ]; then
-              docker build --no-cache --build-arg BRANCH_NAME=dev -t circle-app-$BRANCH_NAME . || { echo "Docker build failed"; exit 1; }
-            else
-              docker build --no-cache --build-arg BRANCH_NAME=prod -t circle-app-$BRANCH_NAME . || { echo "Docker build failed"; exit 1; }
-            fi
+            docker build --no-cache --build-arg BRANCH_NAME=prod -t circle-app-$BRANCH_NAME . || { echo "Docker build failed"; exit 1; }
+            
             # For prod, use the default dist folder (dist)
             docker cp /home/$SERVER_USER/websites/circle/dist/. circle:/usr/share/nginx/html
             echo "Running Docker container #circle-app-$BRANCH_NAME at port $PORT..."
