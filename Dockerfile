@@ -4,11 +4,14 @@ FROM node:20 AS builder
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json and pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies (use npm ci for better reliability)
-RUN npm ci
+# Install pnpm
+RUN npm install -g pnpm
+
+# Install dependencies using pnpm
+RUN pnpm install
 
 # Copy the rest of the application code
 COPY . .
@@ -17,7 +20,7 @@ COPY . .
 RUN ls -la node_modules/.bin/  # This will list executables, including vite
 
 # Build the application
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: Serve the React app using Nginx
 FROM nginx:stable-alpine
