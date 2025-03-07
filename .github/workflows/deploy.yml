@@ -100,11 +100,11 @@ jobs:
             # Build and run the Docker container
             cd /home/$SERVER_USER/websites/circle-$BRANCH_NAME || { echo "Directory /home/$SERVER_USER/websites/circle-$BRANCH_NAME not found"; exit 1; }
 
+            # Build and run the Docker container
+            cd /home/$SERVER_USER/websites/circle-$BRANCH_NAME || { echo "Directory /home/$SERVER_USER/websites/circle-$BRANCH_NAME not found"; exit 1; }
+
             # Build the Docker image with the specified branch name (using the default 'prod' for the build)
             docker build --no-cache --build-arg BRANCH_NAME=$BRANCH_NAME -t circle-app-$BRANCH_NAME . || { echo "Docker build failed"; exit 1; }
-
-            # For prod, use the default dist folder (dist)
-            docker cp /home/$SERVER_USER/websites/circle-$BRANCH_NAME/dist/. circle:/usr/share/nginx/html || { echo "Docker cp failed"; exit 1; }
 
             echo "Running Docker container #circle-app-$BRANCH_NAME at port $PORT..."
 
