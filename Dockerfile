@@ -1,42 +1,21 @@
-# Étape 1 : Build de l'application Next.js
-FROM node:20 AS builder
+FROM node:20.18.3-alpine
 
-# Définir le dossier de travail
 WORKDIR /app
 
-# Copier les fichiers de dépendances
-COPY package.json pnpm-lock.yaml ./
-
-# Installer pnpm globalement
+# Installer pnpm
 RUN npm install -g pnpm
 
-# Vérifier si pnpm est correctement installé
-RUN pnpm --version
-
-# Installer les dépendances
-RUN pnpm install
-
-# Copier le reste du code source
+# Copier les fichiers du projet
 COPY . .
 
-# Construire l'application Next.js
+# Installer les dépendances avec pnpm
+RUN pnpm install
+
+# Build le projet Next.js
 RUN pnpm run build
 
-# Étape 2 : Exécution du serveur Next.js
-FROM node:20 AS runner
-
-# Définir le dossier de travail
-WORKDIR /app
-
-# Copier les fichiers essentiels du builder
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/public ./public
-
-# Exposer le port de Next.js (3000 par défaut)
+# Exposer le port pour l'application Next.js
 EXPOSE 3000
 
-# Démarrer Next.js
+# Lancer l'application Next.js
 CMD ["pnpm", "start"]
