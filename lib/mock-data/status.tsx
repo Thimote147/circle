@@ -1,7 +1,8 @@
+import { supabase } from '@/utils/supabaseClient';
 import React from 'react';
 
 export interface Status {
-   id: string;
+   status_id: string;
    name: string;
    color: string;
    icon: React.FC;
@@ -176,22 +177,33 @@ export const CompletedIcon: React.FC = () => {
    );
 };
 
-export const status: Status[] = [
-   { id: 'in-progress', name: 'In Progress', color: '#facc15', icon: InProgressIcon },
-   {
-      id: 'technical-review',
-      name: 'Technical Review',
-      color: '#22c55e',
-      icon: TechnicalReviewIcon,
-   },
-   { id: 'completed', name: 'Completed', color: '#8b5cf6', icon: CompletedIcon },
-   { id: 'paused', name: 'Paused', color: '#0ea5e9', icon: PausedIcon },
-   { id: 'to-do', name: 'To Do', color: '#f97316', icon: ToDoIcon },
-   { id: 'backlog', name: 'Backlog', color: '#ec4899', icon: BacklogIcon },
-];
+const fetchStatus = async () => {
+   const { data, error } = await supabase.from('status').select('*').order('status_id');
+   if (error) {
+      console.error('Error fetching status:', error);
+      return [];
+   }
+
+   const iconMap: { [key: string]: React.FC } = {
+      BacklogIcon,
+      PausedIcon,
+      ToDoIcon,
+      InProgressIcon,
+      TechnicalReviewIcon,
+      CompletedIcon,
+   };
+
+   data.forEach((status) => {
+      status.icon = iconMap[status.icon];
+   });
+
+   return data as Status[];
+};
+
+export const status: Status[] = await fetchStatus();
 
 export const StatusIcon: React.FC<{ statusId: string }> = ({ statusId }) => {
-   const currentStatus = status.find((s) => s.id === statusId);
+   const currentStatus = status.find((s) => s.status_id === statusId);
    if (!currentStatus) return null;
 
    const IconComponent = currentStatus.icon;

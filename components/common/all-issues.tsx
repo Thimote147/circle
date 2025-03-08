@@ -23,10 +23,10 @@ export default function AllIssues() {
             <div>
                {status.map((statusItem) => (
                   <GroupIssues
-                     key={statusItem.id}
+                     key={statusItem.status_id}
                      status={statusItem}
-                     issues={issuesByStatus[statusItem.id] || []}
-                     count={issuesByStatus[statusItem.id]?.length || 0}
+                     issues={issuesByStatus[statusItem.status_id] || []}
+                     count={issuesByStatus[statusItem.status_id]?.length || 0}
                   />
                ))}
             </div>
@@ -34,10 +34,10 @@ export default function AllIssues() {
             <div className="flex h-full gap-3 px-2 py-2 min-w-max">
                {status.map((statusItem) => (
                   <GroupIssues
-                     key={statusItem.id}
+                     key={statusItem.status_id}
                      status={statusItem}
-                     issues={issuesByStatus[statusItem.id] || []}
-                     count={issuesByStatus[statusItem.id]?.length || 0}
+                     issues={issuesByStatus[statusItem.status_id] || []}
+                     count={issuesByStatus[statusItem.status_id]?.length || 0}
                   />
                ))}
             </div>
