@@ -23,20 +23,20 @@ interface StatusSelectorProps {
 export function StatusSelector({ status, issueId }: StatusSelectorProps) {
    const id = useId();
    const [open, setOpen] = useState<boolean>(false);
-   const [value, setValue] = useState<string>(status.id);
+   const [value, setValue] = useState<string>(status.status_id);
 
    const { updateIssueStatus, filterByStatus } = useIssuesStore();
 
    useEffect(() => {
-      setValue(status.id);
-   }, [status.id]);
+      setValue(status.status_id);
+   }, [status.status_id]);
 
    const handleStatusChange = (statusId: string) => {
       setValue(statusId);
       setOpen(false);
 
       if (issueId) {
-         const newStatus = allStatus.find((s) => s.id === statusId);
+         const newStatus = allStatus.find((s) => s.status_id === statusId);
          if (newStatus) {
             updateIssueStatus(issueId, newStatus);
          }
@@ -56,7 +56,7 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
                   aria-expanded={open}
                >
                   {(() => {
-                     const selectedItem = allStatus.find((item) => item.id === value);
+                     const selectedItem = allStatus.find((item) => item.status_id === value);
                      if (selectedItem) {
                         const Icon = selectedItem.icon;
                         return <Icon />;
@@ -76,8 +76,8 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
                      <CommandGroup>
                         {allStatus.map((item) => (
                            <CommandItem
-                              key={item.id}
-                              value={item.id}
+                              key={item.status_id}
+                              value={item.status_id}
                               onSelect={handleStatusChange}
                               className="flex items-center justify-between"
                            >
@@ -85,9 +85,11 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
                                  <item.icon />
                                  {item.name}
                               </div>
-                              {value === item.id && <CheckIcon size={16} className="ml-auto" />}
+                              {value === item.status_id && (
+                                 <CheckIcon size={16} className="ml-auto" />
+                              )}
                               <span className="text-muted-foreground text-xs">
-                                 {filterByStatus(item.id).length}
+                                 {filterByStatus(item.status_id).length}
                               </span>
                            </CommandItem>
                         ))}

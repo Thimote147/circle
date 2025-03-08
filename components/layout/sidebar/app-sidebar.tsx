@@ -62,7 +62,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                <HelpButton />
                <Button size="icon" variant="secondary" asChild>
                   <Link
-                     href="https://github.com/lndev-ui/circle"
+                     href="https://github.com/Thimote147/circle"
                      target="_blank"
                      rel="noopener noreferrer"
                   >

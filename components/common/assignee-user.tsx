@@ -30,8 +30,14 @@ export function AssigneeUser({ user }: AssigneeUserProps) {
       if (currentAssignee) {
          return (
             <Avatar className="size-6 shrink-0">
-               <AvatarImage src={currentAssignee.avatarUrl} alt={currentAssignee.name} />
-               <AvatarFallback>{currentAssignee.name[0]}</AvatarFallback>
+               {currentAssignee.avatarUrl ? (
+                  <>
+                     <AvatarImage src={currentAssignee.avatarUrl} alt={currentAssignee.username} />
+                     <AvatarFallback>{currentAssignee.username}</AvatarFallback>
+                  </>
+               ) : (
+                  <CircleUserRound className="size-5 text-zinc-600" />
+               )}
             </Avatar>
          );
       } else {
@@ -76,7 +82,7 @@ export function AssigneeUser({ user }: AssigneeUserProps) {
             <DropdownMenuSeparator />
             {users.map((user) => (
                <DropdownMenuItem
-                  key={user.id}
+                  key={user.user_id}
                   onClick={(e) => {
                      e.stopPropagation();
                      setCurrentAssignee(user);
@@ -85,12 +91,20 @@ export function AssigneeUser({ user }: AssigneeUserProps) {
                >
                   <div className="flex items-center gap-2">
                      <Avatar className="h-5 w-5">
-                        <AvatarImage src={user.avatarUrl} alt={user.name} />
-                        <AvatarFallback>{user.name[0]}</AvatarFallback>
+                        {user.avatarUrl ? (
+                           <>
+                              <AvatarImage src={user.avatarUrl} alt={user.username} />
+                              <AvatarFallback>{user.username}</AvatarFallback>
+                           </>
+                        ) : (
+                           <CircleUserRound className="size-5 text-zinc-600" />
+                        )}
                      </Avatar>
-                     <span>{user.name}</span>
+                     <span>{user.username}</span>
                   </div>
-                  {currentAssignee?.id === user.id && <CheckIcon className="ml-auto h-4 w-4" />}
+                  {currentAssignee?.user_id === user.user_id && (
+                     <CheckIcon className="ml-auto h-4 w-4" />
+                  )}
                </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />

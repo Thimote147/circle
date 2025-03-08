@@ -85,7 +85,7 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
 
    // Filters
    filterByStatus: (statusId: string) => {
-      return get().issues.filter((issue) => issue.status.id === statusId);
+      return get().issues.filter((issue) => issue.status.status_id === statusId);
    },
 
    filterByPriority: (priorityId: string) => {

@@ -12,12 +12,12 @@ const geistMono = Geist_Mono({
    subsets: ['latin'],
 });
 
-const siteUrl = 'https://circle.lndev.me';
+const siteUrl = 'https://circle.thimotefetu.fr';
 
 export const metadata: Metadata = {
    title: {
-      template: '%s | Circle by lndev-ui',
-      default: 'Circle by lndev-ui',
+      template: '%s | Circle',
+      default: 'Circle',
    },
    description:
       'Project management interface inspired by Linear. Built with Next.js and shadcn/ui, this application allows tracking of issues, projects and teams with a modern, responsive UI.',
