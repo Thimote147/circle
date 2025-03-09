@@ -9,6 +9,9 @@ export interface User {
    avatarUrl: string;
    email: string;
    status: 'online' | 'offline' | 'away';
+   role: 'Member' | 'Admin' | 'Guest';
+   joinedDate: string;
+   teamIds: string[];
 }
 
 const fetchUsers = async () => {
