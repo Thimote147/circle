@@ -2,7 +2,7 @@ import { supabase } from '@/utils/supabaseClient';
 import React from 'react';
 
 export interface Status {
-   status_id: string;
+   status_id: number;
    name: string;
    color: string;
    icon: React.FC;
@@ -202,7 +202,7 @@ const fetchStatus = async () => {
 
 export const status: Status[] = await fetchStatus();
 
-export const StatusIcon: React.FC<{ statusId: string }> = ({ statusId }) => {
+export const StatusIcon: React.FC<{ statusId: number }> = ({ statusId }) => {
    const currentStatus = status.find((s) => s.status_id === statusId);
    if (!currentStatus) return null;
 

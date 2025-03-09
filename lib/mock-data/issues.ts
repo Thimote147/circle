@@ -1,12 +1,12 @@
-import { LabelInterface, labels } from './labels';
-import { Project, projects } from './projects';
-import { User, users } from './users';
-import { Priority, priorities } from './priorities';
-import { Status, status } from './status';
+import { LabelInterface } from './labels';
+import { Project } from './projects';
+import { User } from './users';
+import { Priority } from './priorities';
+import { Status } from './status';
 import { supabase } from '@/utils/supabaseClient';
 
 export interface Issue {
-   id: string;
+   issue_id: number;
    identifier: string;
    title: string;
    status: Status;
@@ -20,22 +20,13 @@ export interface Issue {
 }
 
 const fetchIssues = async () => {
-   const { data, error } = await supabase.from('issues').select('*');
+   const { data, error } = await supabase.rpc('get_issues').select('*');
    if (error) {
       console.error('Error fetching issues:', error);
       return [];
    }
 
-   // Transform the data to match the expected structure
-   const transformedData = data.map((issue: any) => ({
-      ...issue,
-      status: { status_id: issue.status },
-      assignees: issue.assignee ? { id: issue.assignee } : null,
-      priority: { id: issue.priority },
-      labels: issue.label ? [{ id: issue.label }] : [],
-   }));
-
-   return transformedData as Issue[];
+   return data as Issue[];
 };
 
 export const issues: Issue[] = await fetchIssues();

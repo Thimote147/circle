@@ -1,3 +1,3 @@
 export default function IssueId() {
-   return <div className="">j</div>;
+   return <div className=""></div>;
 }

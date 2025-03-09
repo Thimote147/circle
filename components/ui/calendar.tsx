@@ -57,11 +57,17 @@ function Calendar({
             ...classNames,
          }}
          components={{
-            IconLeft: ({ className, ...props }) => (
-               <ChevronLeft className={cn('size-4', className)} {...props} />
-            ),
-            IconRight: ({ className, ...props }) => (
-               <ChevronRight className={cn('size-4', className)} {...props} />
+            Button: ({ className, ...props }) => (
+               <button
+                  {...props}
+                  className={cn('size-7 flex items-center justify-center', className)}
+               >
+                  {className?.includes('next') ? (
+                     <ChevronRight className="size-4" />
+                  ) : (
+                     <ChevronLeft className="size-4" />
+                  )}
+               </button>
             ),
          }}
          {...props}

@@ -6,7 +6,7 @@ export function LabelBadge({ label }: { label: LabelInterface[] }) {
       <div className="flex items-center justify-center gap-0.5">
          {label.map((l) => (
             <Badge
-               key={l.id}
+               key={l.label_id}
                variant="outline"
                className="gap-1.5 rounded-full text-muted-foreground bg-background"
             >

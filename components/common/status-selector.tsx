@@ -17,21 +17,20 @@ import { useId, useState, useEffect } from 'react';
 
 interface StatusSelectorProps {
    status: Status;
-   issueId: string;
+   issueId: number;
 }
 
 export function StatusSelector({ status, issueId }: StatusSelectorProps) {
    const id = useId();
    const [open, setOpen] = useState<boolean>(false);
-   const [value, setValue] = useState<string>(status.status_id);
-
+   const [value, setValue] = useState<number>(status.status_id);
    const { updateIssueStatus, filterByStatus } = useIssuesStore();
 
    useEffect(() => {
       setValue(status.status_id);
    }, [status.status_id]);
 
-   const handleStatusChange = (statusId: string) => {
+   const handleStatusChange = (statusId: number) => {
       setValue(statusId);
       setOpen(false);
 

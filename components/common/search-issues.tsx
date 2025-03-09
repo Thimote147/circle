@@ -37,7 +37,7 @@ export function SearchIssues() {
                      </div>
                      <div className="divide-y">
                         {searchResults.map((issue) => (
-                           <IssueLine key={issue.id} issue={issue} />
+                           <IssueLine key={issue.issue_id} issue={issue} />
                         ))}
                      </div>
                   </div>

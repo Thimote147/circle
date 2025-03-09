@@ -17,26 +17,26 @@ import { useId, useState, useEffect } from 'react';
 
 interface PrioritySelectorProps {
    priority: Priority;
-   issueId?: string;
+   issueId?: number;
 }
 
 export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
    const id = useId();
    const [open, setOpen] = useState<boolean>(false);
-   const [value, setValue] = useState<string>(priority.id);
+   const [value, setValue] = useState<number>(priority.priority_id);
 
    const { filterByPriority, updateIssuePriority } = useIssuesStore();
 
    useEffect(() => {
-      setValue(priority.id);
-   }, [priority.id]);
+      setValue(priority.priority_id);
+   }, [priority.priority_id]);
 
-   const handlePriorityChange = (priorityId: string) => {
+   const handlePriorityChange = (priorityId: number) => {
       setValue(priorityId);
       setOpen(false);
 
       if (issueId) {
-         const newPriority = priorities.find((p) => p.id === priorityId);
+         const newPriority = priorities.find((p) => p.priority_id === priorityId);
          if (newPriority) {
             updateIssuePriority(issueId, newPriority);
          }
@@ -56,7 +56,7 @@ export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
                   aria-expanded={open}
                >
                   {(() => {
-                     const selectedItem = priorities.find((item) => item.id === value);
+                     const selectedItem = priorities.find((item) => item.priority_id === value);
                      if (selectedItem) {
                         const Icon = selectedItem.icon;
                         return <Icon className="text-muted-foreground size-4" />;
@@ -76,8 +76,8 @@ export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
                      <CommandGroup>
                         {priorities.map((item) => (
                            <CommandItem
-                              key={item.id}
-                              value={item.id}
+                              key={item.priority_id}
+                              value={item.priority_id}
                               onSelect={handlePriorityChange}
                               className="flex items-center justify-between"
                            >
@@ -85,9 +85,11 @@ export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
                                  <item.icon className="text-muted-foreground size-4" />
                                  {item.name}
                               </div>
-                              {value === item.id && <CheckIcon size={16} className="ml-auto" />}
+                              {value === item.priority_id && (
+                                 <CheckIcon size={16} className="ml-auto" />
+                              )}
                               <span className="text-muted-foreground text-xs">
-                                 {filterByPriority(item.id).length}
+                                 {filterByPriority(item.priority_id).length}
                               </span>
                            </CommandItem>
                         ))}

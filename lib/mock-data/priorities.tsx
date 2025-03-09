@@ -1,3 +1,4 @@
+import { supabase } from '@/utils/supabaseClient';
 import React from 'react';
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
@@ -98,15 +99,31 @@ const LowPriorityIcon = ({ className, ...props }: IconProps) => (
 );
 
 export interface Priority {
-   id: string;
+   priority_id: number;
    name: string;
    icon: React.FC<React.SVGProps<SVGSVGElement>>;
 }
 
-export const priorities: Priority[] = [
-   { id: 'no-priority', name: 'No priority', icon: NoPriorityIcon },
-   { id: 'high', name: 'High', icon: HighPriorityIcon },
-   { id: 'medium', name: 'Medium', icon: MediumPriorityIcon },
-   { id: 'low', name: 'Low', icon: LowPriorityIcon },
-   { id: 'urgent', name: 'Urgent', icon: UrgentPriorityIcon },
-];
+export const fetchPriorities = async () => {
+   const { data, error } = await supabase.from('priorities').select('*').order('priority_id');
+   if (error) {
+      console.error('Error fetching priorities:', error);
+      return [];
+   }
+
+   const iconMap: { [key: string]: React.FC } = {
+      NoPriorityIcon,
+      LowPriorityIcon,
+      MediumPriorityIcon,
+      HighPriorityIcon,
+      UrgentPriorityIcon,
+   };
+
+   data.forEach((priority) => {
+      priority.icon = iconMap[priority.icon];
+   });
+
+   return data as Priority[];
+};
+
+export const priorities: Priority[] = await fetchPriorities();
