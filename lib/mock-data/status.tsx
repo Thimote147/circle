@@ -200,10 +200,10 @@ const fetchStatus = async () => {
    return data as Status[];
 };
 
-export const status: Status[] = await fetchStatus();
+export const status: Promise<Status[]> = fetchStatus();
 
-export const StatusIcon: React.FC<{ statusId: number }> = ({ statusId }) => {
-   const currentStatus = status.find((s) => s.status_id === statusId);
+export const StatusIcon: React.FC<{ statusId: number }> = async ({ statusId }) => {
+   const currentStatus = (await status).find((s) => s.status_id === statusId);
    if (!currentStatus) return null;
 
    const IconComponent = currentStatus.icon;

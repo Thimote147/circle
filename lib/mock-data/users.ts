@@ -27,4 +27,4 @@ const fetchUsers = async () => {
    return transformedData as User[];
 };
 
-export const users: User[] = await fetchUsers();
+export const users: Promise<User[]> = fetchUsers();

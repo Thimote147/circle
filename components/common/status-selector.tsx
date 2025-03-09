@@ -24,7 +24,17 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
    const id = useId();
    const [open, setOpen] = useState<boolean>(false);
    const [value, setValue] = useState<number>(status.status_id);
+   const [statusList, setStatusList] = useState<Status[]>([]);
    const { updateIssueStatus, filterByStatus } = useIssuesStore();
+
+   // Load the status list asynchronously on component mount
+   useEffect(() => {
+      const fetchStatuses = async () => {
+         const statuses = await allStatus;
+         setStatusList(statuses);
+      };
+      fetchStatuses();
+   }, []);
 
    useEffect(() => {
       setValue(status.status_id);
@@ -35,7 +45,7 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
       setOpen(false);
 
       if (issueId) {
-         const newStatus = allStatus.find((s) => s.status_id === statusId);
+         const newStatus = statusList.find((s) => s.status_id === statusId);
          if (newStatus) {
             updateIssueStatus(issueId, newStatus);
          }
@@ -54,14 +64,9 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
                   role="combobox"
                   aria-expanded={open}
                >
-                  {(() => {
-                     const selectedItem = allStatus.find((item) => item.status_id === value);
-                     if (selectedItem) {
-                        const Icon = selectedItem.icon;
-                        return <Icon />;
-                     }
-                     return null;
-                  })()}
+                  {statusList.length > 0 && (
+                     <>{statusList.find((item) => item.status_id === value)?.icon ?? null}</>
+                  )}
                </Button>
             </PopoverTrigger>
             <PopoverContent
@@ -73,11 +78,11 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
                   <CommandList>
                      <CommandEmpty>No status found.</CommandEmpty>
                      <CommandGroup>
-                        {allStatus.map((item) => (
+                        {statusList.map((item) => (
                            <CommandItem
                               key={item.status_id}
                               value={item.status_id}
-                              onSelect={handleStatusChange}
+                              onSelect={() => handleStatusChange(item.status_id)}
                               className="flex items-center justify-between"
                            >
                               <div className="flex items-center gap-2">

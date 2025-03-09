@@ -46,8 +46,8 @@ interface IssuesState {
 
 export const useIssuesStore = create<IssuesState>((set, get) => ({
    // Initial state
-   issues: mockIssues,
-   issuesByStatus: groupIssuesByStatus(mockIssues),
+   issues: [],
+   issuesByStatus: {},
 
    // Actions
    addIssue: (issue: Issue) => {
@@ -160,3 +160,12 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
       return get().issues.find((issue) => issue.issue_id === id);
    },
 }));
+
+// Initialize issues after store creation
+const initializeStore = async () => {
+   const receivedIssues = await mockIssues;
+   useIssuesStore.getState().issues = receivedIssues;
+   useIssuesStore.getState().issuesByStatus = groupIssuesByStatus(receivedIssues);
+};
+
+initializeStore();

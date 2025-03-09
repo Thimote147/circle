@@ -1,4 +1,5 @@
 'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, users } from '@/lib/mock-data/users';
 import {
@@ -10,7 +11,7 @@ import {
    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { CheckIcon, CircleUserRound, Send, UserIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const color = {
    online: '#00cc66',
@@ -25,6 +26,17 @@ interface AssigneeUserProps {
 export function AssigneeUser({ user }: AssigneeUserProps) {
    const [open, setOpen] = useState(false);
    const [currentAssignee, setCurrentAssignee] = useState<User | null>(user);
+   const [userList, setUserList] = useState<User[]>([]);
+
+   useEffect(() => {
+      // Charger les utilisateurs de manière asynchrone
+      const fetchUsers = async () => {
+         const fetchedUsers = await users; // Si `users` est une promesse, attends qu'elle soit résolue.
+         setUserList(fetchedUsers);
+      };
+
+      fetchUsers();
+   }, []); // L'effet se lance une seule fois après le premier rendu
 
    const renderAvatar = () => {
       if (currentAssignee) {
@@ -80,7 +92,7 @@ export function AssigneeUser({ user }: AssigneeUserProps) {
                {!currentAssignee && <CheckIcon className="ml-auto h-4 w-4" />}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            {users.map((user) => (
+            {userList.map((user) => (
                <DropdownMenuItem
                   key={user.user_id}
                   onClick={(e) => {

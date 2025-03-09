@@ -126,4 +126,4 @@ export const fetchPriorities = async () => {
    return data as Priority[];
 };
 
-export const priorities: Priority[] = await fetchPriorities();
+export const priorities: Promise<Priority[]> = fetchPriorities();

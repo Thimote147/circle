@@ -16,4 +16,4 @@ export const fetchLabels = async () => {
    return data as LabelInterface[];
 };
 
-export const labels: LabelInterface[] = await fetchLabels();
+export const labels: Promise<LabelInterface[]> = fetchLabels();

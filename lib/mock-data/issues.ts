@@ -29,10 +29,10 @@ const fetchIssues = async () => {
    return data as Issue[];
 };
 
-export const issues: Issue[] = await fetchIssues();
+export const issues: Promise<Issue[]> = fetchIssues();
 
-export function groupIssuesByStatus(issues: Issue[]): Record<string, Issue[]> {
-   return issues.reduce<Record<string, Issue[]>>((acc, issue) => {
+export function groupIssuesByStatus(issues: Issue[]): Record<number, Issue[]> {
+   return issues.reduce<Record<number, Issue[]>>((acc, issue) => {
       const statusId = issue.status.status_id;
 
       if (!acc[statusId]) {

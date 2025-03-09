@@ -24,19 +24,27 @@ export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
    const id = useId();
    const [open, setOpen] = useState<boolean>(false);
    const [value, setValue] = useState<number>(priority.priority_id);
-
+   const [priorityData, setPriorityData] = useState<Priority[]>([]); // Etat pour stocker les priorités
    const { filterByPriority, updateIssuePriority } = useIssuesStore();
+
+   useEffect(() => {
+      const fetchPriorities = async () => {
+         const fetchedPriorities = await priorities;
+         setPriorityData(fetchedPriorities);
+      };
+      fetchPriorities();
+   }, []);
 
    useEffect(() => {
       setValue(priority.priority_id);
    }, [priority.priority_id]);
 
-   const handlePriorityChange = (priorityId: number) => {
+   const handlePriorityChange = async (priorityId: number) => {
       setValue(priorityId);
       setOpen(false);
 
       if (issueId) {
-         const newPriority = priorities.find((p) => p.priority_id === priorityId);
+         const newPriority = priorityData.find((p) => p.priority_id === priorityId);
          if (newPriority) {
             updateIssuePriority(issueId, newPriority);
          }
@@ -55,14 +63,21 @@ export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
                   role="combobox"
                   aria-expanded={open}
                >
-                  {(() => {
-                     const selectedItem = priorities.find((item) => item.priority_id === value);
-                     if (selectedItem) {
-                        const Icon = selectedItem.icon;
-                        return <Icon className="text-muted-foreground size-4" />;
-                     }
-                     return null;
-                  })()}
+                  {priorityData.length > 0 && (
+                     <>
+                        {priorityData
+                           .filter((item) => item.priority_id === value)
+                           .map((selectedItem) => {
+                              const Icon = selectedItem.icon;
+                              return (
+                                 <Icon
+                                    key={selectedItem.priority_id}
+                                    className="text-muted-foreground size-4"
+                                 />
+                              );
+                           })}
+                     </>
+                  )}
                </Button>
             </PopoverTrigger>
             <PopoverContent
@@ -74,11 +89,11 @@ export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
                   <CommandList>
                      <CommandEmpty>No priority found.</CommandEmpty>
                      <CommandGroup>
-                        {priorities.map((item) => (
+                        {priorityData.map((item) => (
                            <CommandItem
                               key={item.priority_id}
                               value={item.priority_id}
-                              onSelect={handlePriorityChange}
+                              onSelect={() => handlePriorityChange(item.priority_id)}
                               className="flex items-center justify-between"
                            >
                               <div className="flex items-center gap-2">
