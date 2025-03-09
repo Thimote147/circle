@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useIssuesStore } from '@/store/issues-store';
-import { status as allStatus, Status } from '@/mock-data/status';
+import { status as allStatus, Status, StatusIcon } from '@/mock-data/status';
 import { CheckIcon } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
 
@@ -64,9 +64,7 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
                   role="combobox"
                   aria-expanded={open}
                >
-                  {statusList.length > 0 && (
-                     <>{statusList.find((item) => item.status_id === value)?.icon ?? null}</>
-                  )}
+                  {statusList.length > 0 && <StatusIcon statusId={status.status_id} />}
                </Button>
             </PopoverTrigger>
             <PopoverContent

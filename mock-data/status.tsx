@@ -1,5 +1,5 @@
 import { supabase } from '@/utils/supabaseClient';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export interface Status {
    status_id: number;
@@ -202,8 +202,17 @@ const fetchStatus = async () => {
 
 export const status: Promise<Status[]> = fetchStatus();
 
-export const StatusIcon: React.FC<{ statusId: number }> = async ({ statusId }) => {
-   const currentStatus = (await status).find((s) => s.status_id === statusId);
+export const StatusIcon: React.FC<{ statusId: number }> = ({ statusId }) => {
+   const [statusList, setStatusList] = useState<Status[]>([]);
+   useEffect(() => {
+      const fetchStatuses = async () => {
+         const statuses = await status;
+         setStatusList(statuses);
+      };
+      fetchStatuses();
+   }, []);
+
+   const currentStatus = statusList.find((s) => s.status_id === statusId);
    if (!currentStatus) return null;
 
    const IconComponent = currentStatus.icon;
