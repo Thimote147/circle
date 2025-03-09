@@ -9,6 +9,7 @@ export interface Issue {
    issue_id: number;
    identifier: string;
    title: string;
+   description: string;
    status: Status;
    assignees: User | null;
    priority: Priority;

@@ -11,6 +11,9 @@ interface IssuesState {
    issues: Issue[];
    issuesByStatus: Record<string, Issue[]>;
 
+   //
+   getAllIssues: () => Issue[];
+
    // Actions
    addIssue: (issue: Issue) => void;
    updateIssue: (id: number, updatedIssue: Partial<Issue>) => void;
@@ -19,9 +22,9 @@ interface IssuesState {
    // Filters
    filterByStatus: (statusId: number) => Issue[];
    filterByPriority: (priorityId: number) => Issue[];
-   filterByAssignee: (userId: string | null) => Issue[];
+   filterByAssignee: (userId: number | null) => Issue[];
    filterByLabel: (labelId: number) => Issue[];
-   filterByProject: (projectId: string) => Issue[];
+   filterByProject: (projectId: number) => Issue[];
    searchIssues: (query: string) => Issue[];
 
    // Status management
@@ -48,6 +51,9 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
    // Initial state
    issues: [],
    issuesByStatus: {},
+
+   //
+   getAllIssues: () => get().issues,
 
    // Actions
    addIssue: (issue: Issue) => {
@@ -92,7 +98,7 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
       return get().issues.filter((issue) => issue.priority.priority_id === priorityId);
    },
 
-   filterByAssignee: (userId: string | null) => {
+   filterByAssignee: (userId: number | null) => {
       if (userId === null) {
          return get().issues.filter((issue) => issue.assignees === null);
       }
@@ -105,8 +111,8 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
       );
    },
 
-   filterByProject: (projectId: string) => {
-      return get().issues.filter((issue) => issue.project?.id === projectId);
+   filterByProject: (projectId: number) => {
+      return get().issues.filter((issue) => issue.project?.project_id === projectId);
    },
 
    searchIssues: (query: string) => {

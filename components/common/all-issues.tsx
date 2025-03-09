@@ -14,23 +14,14 @@ export default function AllIssues() {
    const { isSearchOpen, searchQuery } = useSearchStore();
    const { viewType } = useViewStore();
    const [statusList, setStatusList] = useState<Status[]>([]);
-   const [isLoadingStatus, setIsLoadingStatus] = useState<boolean>(false);
-   const [isLoadingIssues, setIsLoadingIssues] = useState<boolean>(false);
 
    useEffect(() => {
       const fetchStatus = async () => {
          const fetchedStatus = await status;
          setStatusList(fetchedStatus);
-         setIsLoadingStatus(true);
       };
       fetchStatus();
    }, []);
-
-   useEffect(() => {
-      if (issuesByStatus && Object.keys(issuesByStatus).length > 0) {
-         setIsLoadingIssues(true);
-      }
-   }, [issuesByStatus]);
 
    return (
       <div className={cn('w-full h-full', viewType === 'grid' ? 'overflow-x-auto' : '')}>
