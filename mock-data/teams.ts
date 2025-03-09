@@ -6,6 +6,7 @@ export interface Team {
    name: string;
    icon: string;
    joined: boolean;
+   color: string;
    members: User[];
    projects: Project[];
 }

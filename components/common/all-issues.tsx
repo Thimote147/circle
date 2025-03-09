@@ -1,12 +1,12 @@
 'use client';
 
 import { GroupIssues } from '@/components/common/group-issues';
-import { Status, status } from '@/lib/mock-data/status';
-import { useIssuesStore } from '@/lib/store/issues-store';
-import { useSearchStore } from '@/lib/store/search-store';
-import { useViewStore } from '@/lib/store/view-store';
-import { SearchIssues } from './search-issues';
+import { useIssuesStore } from '@/store/issues-store';
+import { useSearchStore } from '@/store/search-store';
+import { useViewStore } from '@/store/view-store';
 import { cn } from '@/lib/utils';
+import { Status, status } from '@/mock-data/status';
+import { SearchIssues } from './search-issues';
 import { useEffect, useState } from 'react';
 
 export default function AllIssues() {
@@ -32,7 +32,6 @@ export default function AllIssues() {
       }
    }, [issuesByStatus]);
 
-   // Si les statuts ou les issues sont encore en train de se charger, afficher un loader
    if (!isLoadingStatus || !isLoadingIssues) {
       return <div>Loading...</div>;
    }
