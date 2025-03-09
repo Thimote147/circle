@@ -32,10 +32,6 @@ export default function AllIssues() {
       }
    }, [issuesByStatus]);
 
-   if (!isLoadingStatus || !isLoadingIssues) {
-      return <div>Loading...</div>;
-   }
-
    return (
       <div className={cn('w-full h-full', viewType === 'grid' ? 'overflow-x-auto' : '')}>
          {isSearchOpen && searchQuery.trim() !== '' ? (

@@ -6,13 +6,14 @@ import * as React from 'react';
 
 import { HelpButton } from '@/components/layout/sidebar/help-button';
 import { NavInbox } from '@/components/layout/sidebar/nav-inbox';
-// import { NavTeams } from '@/components/layout/sidebar/nav-teams';
+import { NavTeams } from '@/components/layout/sidebar/nav-teams';
 import { NavWorkspace } from '@/components/layout/sidebar/nav-workspace';
 import { OrgSwitcher } from '@/components/layout/sidebar/org-switcher';
 import { Button } from '@/components/ui/button';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
-// import { teams } from '@/mock-data/teams';
+import { Team, teams } from '@/mock-data/teams';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const data = {
    inbox: [
@@ -47,6 +48,16 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+   const [teamList, setTeamList] = useState<Team[]>([]);
+
+   useEffect(() => {
+      const fetchTeams = async () => {
+         const data = await teams;
+         setTeamList(data);
+      };
+      fetchTeams();
+   }, []);
+
    return (
       <Sidebar collapsible="offcanvas" {...props}>
          <SidebarHeader>
@@ -55,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
          <SidebarContent>
             <NavInbox inbox={data.inbox} />
             <NavWorkspace workspace={data.workspace} />
-            {/* <NavTeams items={teams.filter((t) => t.joined)} /> */}
+            <NavTeams items={teamList.filter((t) => t.joined)} />
          </SidebarContent>
          <SidebarFooter>
             <div className="w-full flex items-center justify-between">

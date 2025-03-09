@@ -1,8 +1,9 @@
+import { supabase } from '@/utils/supabaseClient';
 import { Project } from './projects';
 import { User } from './users';
 
 export interface Team {
-   id: string;
+   team_id: number;
    name: string;
    icon: string;
    joined: boolean;
@@ -11,6 +12,25 @@ export interface Team {
    projects: Project[];
 }
 
+const fetchTeams = async () => {
+   const { data, error } = await supabase.from('teams').select('*');
+   if (error) {
+      console.error('Error fetching teams:', error);
+      return [];
+   }
+
+   // Transform the data to match the expected structure
+   const transformedData = data.map((team: Team) => ({
+      ...team,
+      members: [],
+      projects: [],
+   }));
+
+   return transformedData as Team[];
+};
+
+export const teams: Promise<Team[]> = fetchTeams();
+
 // export const teams: Team[] = [
 //    {
 //       id: 'CORE',
@@ -18,8 +38,8 @@ export interface Team {
 //       icon: '🛠️',
 //       joined: true,
 //       color: '#FF0000',
-//       members: [users[0], users[1], users[2], users[3]],
-//       projects: [projects[1], projects[1], projects[2], projects[3]],
+//       members: [],
+//       projects: [],
 //    },
 //    {
 //       id: 'DESIGN',
@@ -27,8 +47,8 @@ export interface Team {
 //       icon: '🎨',
 //       joined: true,
 //       color: '#00FF00',
-//       members: [users[0], users[1], users[2], users[3]],
-//       projects: [projects[1], projects[1], projects[2], projects[3]],
+//       members: [],
+//       projects: [],
 //    },
 //    {
 //       id: 'PERFOMANCE',
@@ -36,8 +56,8 @@ export interface Team {
 //       icon: '☀️',
 //       joined: true,
 //       color: '#0000FF',
-//       members: [users[0], users[1], users[2], users[3]],
-//       projects: [projects[1], projects[1], projects[2], projects[3]],
+//       members: [],
+//       projects: [],
 //    },
 //    {
 //       id: 'UX',
@@ -45,8 +65,8 @@ export interface Team {
 //       icon: '👨🏼‍🎨',
 //       joined: false,
 //       color: '#FF00FF',
-//       members: [users[0], users[1], users[2], users[3]],
-//       projects: [projects[1], projects[1], projects[2], projects[3]],
+//       members: [],
+//       projects: [],
 //    },
 //    {
 //       id: 'DATA',
@@ -54,8 +74,8 @@ export interface Team {
 //       icon: '📊',
 //       joined: false,
 //       color: '#0000FF',
-//       members: [users[0], users[1], users[2], users[3]],
-//       projects: [projects[1], projects[1], projects[2], projects[3]],
+//       members: [],
+//       projects: [],
 //    },
 //    {
 //       id: 'MOBILE',
@@ -63,8 +83,8 @@ export interface Team {
 //       icon: '📱',
 //       joined: false,
 //       color: '#0000FF',
-//       members: [users[0], users[1], users[2], users[3]],
-//       projects: [projects[1], projects[1], projects[2], projects[3]],
+//       members: [],
+//       projects: [],
 //    },
 //    {
 //       id: 'WEB',
@@ -72,8 +92,8 @@ export interface Team {
 //       icon: '🌐',
 //       joined: true,
 //       color: '#0000FF',
-//       members: [users[0], users[1], users[2], users[3]],
-//       projects: [projects[1], projects[1], projects[2], projects[3]],
+//       members: [],
+//       projects: [],
 //    },
 //    {
 //       id: 'UI',
@@ -81,7 +101,7 @@ export interface Team {
 //       icon: '👨🏼‍🎨',
 //       joined: false,
 //       color: '#FF00FF',
-//       members: [users[0], users[1], users[2], users[3]],
-//       projects: [projects[1], projects[1], projects[2], projects[3]],
+//       members: [],
+//       projects: [],
 //    },
 // ];
