@@ -92,7 +92,7 @@ export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
                         {priorityData.map((item) => (
                            <CommandItem
                               key={item.priority_id}
-                              value={item.priority_id}
+                              value={item.priority_id.toString()}
                               onSelect={() => handlePriorityChange(item.priority_id)}
                               className="flex items-center justify-between"
                            >

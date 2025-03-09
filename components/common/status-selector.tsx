@@ -81,7 +81,7 @@ export function StatusSelector({ status, issueId }: StatusSelectorProps) {
                         {statusList.map((item) => (
                            <CommandItem
                               key={item.status_id}
-                              value={item.status_id}
+                              value={item.status_id.toString()}
                               onSelect={() => handleStatusChange(item.status_id)}
                               className="flex items-center justify-between"
                            >
