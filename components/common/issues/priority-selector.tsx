@@ -24,7 +24,7 @@ export function PrioritySelector({ priority, issueId }: PrioritySelectorProps) {
    const id = useId();
    const [open, setOpen] = useState<boolean>(false);
    const [value, setValue] = useState<number>(priority.priority_id);
-   const [priorityData, setPriorityData] = useState<Priority[]>([]); // Etat pour stocker les priorités
+   const [priorityData, setPriorityData] = useState<Priority[]>([]);
    const { filterByPriority, updateIssuePriority } = useIssuesStore();
 
    useEffect(() => {

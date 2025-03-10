@@ -4,6 +4,7 @@ import { Priority } from '@/mock-data/priorities';
 import { Project } from '@/mock-data/projects';
 import { Status } from '@/mock-data/status';
 import { User } from '@/mock-data/users';
+import { supabase } from '@/utils/supabaseClient';
 import { create } from 'zustand';
 
 interface IssuesState {
@@ -71,6 +72,20 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
          const newIssues = state.issues.map((issue) =>
             issue.issue_id === id ? { ...issue, ...updatedIssue } : issue
          );
+
+         supabase
+            .from('issues')
+            .update(
+               updatedIssue.priority
+                  ? { priority: updatedIssue.priority.priority_id }
+                  : { status: updatedIssue.status!.status_id }
+            )
+            .eq('issue_id', id)
+            .then(({ data, error }) => {
+               if (error) {
+                  console.error('Error updating issue:', error);
+               }
+            });
 
          return {
             issues: newIssues,
