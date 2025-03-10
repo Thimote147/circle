@@ -13,6 +13,11 @@ import { status } from '@/mock-data/status';
 import { useIssuesStore } from '@/store/issues-store';
 import { useCreateIssueStore } from '@/store/create-issue-store';
 import { toast } from 'sonner';
+import { StatusSelector } from './status-selector';
+import { PrioritySelector } from './priority-selector';
+import { AssigneeSelector } from './assignee-selector';
+import { ProjectSelector } from './project-selector';
+import { LabelSelector } from './label-selector';
 
 export function CreateNewIssue() {
    const [createMore, setCreateMore] = useState<boolean>(false);
@@ -108,7 +113,36 @@ export function CreateNewIssue() {
                />
 
                <div className="w-full flex items-center justify-start gap-1.5">
-                  {/* Other selectors like Status, Priority, etc. */}
+                  <StatusSelector
+                     status={addIssueForm.status}
+                     onChange={(newStatus) =>
+                        setAddIssueForm({ ...addIssueForm, status: newStatus })
+                     }
+                  />
+                  <PrioritySelector
+                     priority={addIssueForm.priority}
+                     onChange={(newPriority) =>
+                        setAddIssueForm({ ...addIssueForm, priority: newPriority })
+                     }
+                  />
+                  <AssigneeSelector
+                     assignee={addIssueForm.assignees}
+                     onChange={(newAssignee) =>
+                        setAddIssueForm({ ...addIssueForm, assignees: newAssignee })
+                     }
+                  />
+                  <ProjectSelector
+                     project={addIssueForm.project}
+                     onChange={(newProject) =>
+                        setAddIssueForm({ ...addIssueForm, project: newProject })
+                     }
+                  />
+                  <LabelSelector
+                     selectedLabels={addIssueForm.labels}
+                     onChange={(newLabels) =>
+                        setAddIssueForm({ ...addIssueForm, labels: newLabels })
+                     }
+                  />
                </div>
             </div>
             <div className="flex items-center justify-between py-2.5 px-4 w-full border-t">

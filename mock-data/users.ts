@@ -1,4 +1,5 @@
 import { supabase } from '@/utils/supabaseClient';
+import { Team } from './teams';
 
 export interface User {
    user_id: number;
@@ -11,7 +12,7 @@ export interface User {
    status: 'online' | 'offline' | 'away';
    role: 'Member' | 'Admin' | 'Guest';
    joinedDate: string;
-   teamIds: string[];
+   teams: Team[];
 }
 
 export const statusUserColors = {
@@ -21,7 +22,7 @@ export const statusUserColors = {
 };
 
 const fetchUsers = async () => {
-   const { data, error } = await supabase.from('users').select('*');
+   const { data, error } = await supabase.rpc('get_users').select('*');
    if (error) {
       console.error('Error fetching users:', error);
       return [];

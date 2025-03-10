@@ -9,24 +9,23 @@ export default function Members() {
 
    useEffect(() => {
       const fetchUsers = async () => {
-         // Assuming `users` is a promise or async data source
          const data = await users;
          setUserList(data);
       };
 
       fetchUsers();
-   }, []); // Empty dependency array to run only once when the component mounts
+   }, []);
 
    return (
-      <div>
+      <div className="w-full">
          <div className="bg-container px-6 py-1.5 text-sm flex items-center text-muted-foreground border-b sticky top-0 z-10">
-            <div className="w-[30%]">Name</div>
-            <div className="w-[20%]">Status</div>
-            <div className="w-[20%]">Joined</div>
-            <div className="w-[30%]">Teams</div>
+            <div className="w-[70%] md:w-[60%] lg:w-[55%]">Name</div>
+            <div className="w-[30%] md:w-[20%] lg:w-[15%]">Status</div>
+            <div className="hidden lg:block w-[15%]">Joined</div>
+            <div className="w-[30%] hidden md:block md:w-[20%] lg:w-[15%]">Teams</div>
          </div>
 
-         <div className="w-full flex flex-col items-center">
+         <div className="w-full">
             {userList.map((user) => (
                <MemberLine key={user.user_id} user={user} />
             ))}

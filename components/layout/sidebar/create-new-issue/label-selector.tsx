@@ -29,7 +29,6 @@ export function LabelSelector({ selectedLabels, onChange }: LabelSelectorProps) 
    const { filterByLabel } = useIssuesStore();
 
    useEffect(() => {
-      // Chargement des labels de manière asynchrone
       const fetchLabels = async () => {
          const fetchedLabels = await labels;
          setLabelList(fetchedLabels);

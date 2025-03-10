@@ -7,7 +7,7 @@ export interface LabelInterface {
 }
 
 export const fetchLabels = async () => {
-   const { data, error } = await supabase.rpc('get_labels').select('*');
+   const { data, error } = await supabase.from('labels').select('*');
    if (error) {
       console.error('Error fetching labels:', error);
       return [];

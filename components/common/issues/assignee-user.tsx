@@ -86,33 +86,35 @@ export function AssigneeUser({ user }: AssigneeUserProps) {
                {!currentAssignee && <CheckIcon className="ml-auto h-4 w-4" />}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            {userList.map((user) => (
-               <DropdownMenuItem
-                  key={user.user_id}
-                  onClick={(e) => {
-                     e.stopPropagation();
-                     setCurrentAssignee(user);
-                     setOpen(false);
-                  }}
-               >
-                  <div className="flex items-center gap-2">
-                     <Avatar className="h-5 w-5">
-                        {user.avatarUrl ? (
-                           <>
-                              <AvatarImage src={user.avatarUrl} alt={user.username} />
-                              <AvatarFallback>{user.username}</AvatarFallback>
-                           </>
-                        ) : (
-                           <CircleUserRound className="size-5 text-zinc-600" />
-                        )}
-                     </Avatar>
-                     <span>{user.username}</span>
-                  </div>
-                  {currentAssignee?.user_id === user.user_id && (
-                     <CheckIcon className="ml-auto h-4 w-4" />
-                  )}
-               </DropdownMenuItem>
-            ))}
+            {userList
+               .filter((user) => user.teams && user.teams.some((team) => team.team_id === 1))
+               .map((user) => (
+                  <DropdownMenuItem
+                     key={user.user_id}
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentAssignee(user);
+                        setOpen(false);
+                     }}
+                  >
+                     <div className="flex items-center gap-2">
+                        <Avatar className="h-5 w-5">
+                           {user.avatarUrl ? (
+                              <>
+                                 <AvatarImage src={user.avatarUrl} alt={user.username} />
+                                 <AvatarFallback>{user.username}</AvatarFallback>
+                              </>
+                           ) : (
+                              <CircleUserRound className="size-5 text-zinc-600" />
+                           )}
+                        </Avatar>
+                        <span>{user.username}</span>
+                     </div>
+                     {currentAssignee?.user_id === user.user_id && (
+                        <CheckIcon className="ml-auto h-4 w-4" />
+                     )}
+                  </DropdownMenuItem>
+               ))}
             <DropdownMenuSeparator />
             <DropdownMenuLabel>New user</DropdownMenuLabel>
             <DropdownMenuItem>
