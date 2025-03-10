@@ -14,6 +14,12 @@ export interface User {
    teamIds: string[];
 }
 
+export const statusUserColors = {
+   online: '#00cc66',
+   offline: '#969696',
+   away: '#ffcc00',
+};
+
 const fetchUsers = async () => {
    const { data, error } = await supabase.from('users').select('*');
    if (error) {
