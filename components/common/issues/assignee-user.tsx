@@ -23,14 +23,14 @@ export function AssigneeUser({ user }: AssigneeUserProps) {
    const [userList, setUserList] = useState<User[]>([]);
 
    useEffect(() => {
-      // Charger les utilisateurs de manière asynchrone
       const fetchUsers = async () => {
-         const fetchedUsers = await users; // Si `users` est une promesse, attends qu'elle soit résolue.
+         const fetchedUsers = await users;
+
          setUserList(fetchedUsers);
       };
 
       fetchUsers();
-   }, []); // L'effet se lance une seule fois après le premier rendu
+   }, []);
 
    const renderAvatar = () => {
       if (currentAssignee) {

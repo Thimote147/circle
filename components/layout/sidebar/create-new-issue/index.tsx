@@ -25,9 +25,8 @@ export function CreateNewIssue() {
    const { addIssue, getAllIssues } = useIssuesStore();
 
    const createDefaultData = useCallback(async () => {
-      // Déplacer generateUniqueIdentifier à l'intérieur de useCallback
-      const generateUniqueIdentifier = () => {
-         const identifiers = getAllIssues().map((issue) => issue.identifier);
+      const generateUniqueIdentifier = async () => {
+         const identifiers = (await getAllIssues()).map((issue) => issue.identifier);
          let identifier = Math.floor(Math.random() * 999)
             .toString()
             .padStart(3, '0');
@@ -39,7 +38,8 @@ export function CreateNewIssue() {
          return identifier;
       };
 
-      const identifier = generateUniqueIdentifier();
+      const identifier = await generateUniqueIdentifier();
+
       return {
          issue_id: 0,
          identifier: `LNUI-${identifier}`,
@@ -50,7 +50,7 @@ export function CreateNewIssue() {
          priority: (await priorities).find((p) => p.priority_id === 1)!,
          labels: [],
          createdAt: new Date().toISOString(),
-         cycleId: '',
+         cycleId: 1,
          project: undefined,
          subissues: [],
       };

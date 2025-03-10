@@ -13,7 +13,7 @@ interface IssuesState {
    issuesByStatus: Record<string, Issue[]>;
 
    //
-   getAllIssues: () => Issue[];
+   getAllIssues: () => Promise<Issue[]>;
 
    // Actions
    addIssue: (issue: Issue) => void;
@@ -54,10 +54,36 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
    issuesByStatus: {},
 
    //
-   getAllIssues: () => get().issues,
+   getAllIssues: async () => {
+      const { data, error } = await supabase.rpc('get_issues').select('*');
+      if (error) {
+         console.error('Error fetching issues:', error);
+         return [];
+      }
+
+      return data as Issue[];
+   },
 
    // Actions
-   addIssue: (issue: Issue) => {
+   addIssue: async (issue: Issue) => {
+      const { error, data } = await supabase.rpc('insert_issue', {
+         p_identifier: issue.identifier,
+         p_title: issue.title,
+         p_description: issue.description,
+         p_status: issue.status.status_id,
+         p_priority: issue.priority.priority_id,
+         p_labels: issue.labels.length > 0 ? issue.labels.map((label) => label.label_id) : null,
+         p_createdAt: issue.createdAt.split('T')[0],
+         p_cycleId: issue.cycleId || 1,
+         p_project: issue.project ? issue.project.project_id : null,
+         p_subissues: issue.subissues && issue.subissues.length > 0 ? issue.subissues : null,
+      });
+
+      if (error) {
+         console.error('Error adding issue:', error);
+         return;
+      }
+
       set((state) => {
          const newIssues = [...state.issues, issue];
          return {

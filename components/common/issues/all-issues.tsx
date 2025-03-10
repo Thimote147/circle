@@ -20,6 +20,7 @@ export default function AllIssues() {
          const fetchedStatus = await status;
          setStatusList(fetchedStatus);
       };
+
       fetchStatus();
    }, []);
 

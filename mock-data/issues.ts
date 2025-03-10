@@ -15,9 +15,9 @@ export interface Issue {
    priority: Priority;
    labels: LabelInterface[];
    createdAt: string;
-   cycleId: string;
+   cycleId: number;
    project?: Project;
-   subissues?: string[];
+   subissues?: number[];
 }
 
 const fetchIssues = async () => {

@@ -9,6 +9,8 @@ import { ProjectBadge } from './project-badge';
 import { StatusSelector } from './status-selector';
 
 export function IssueLine({ issue }: { issue: Issue }) {
+   console.log('IssueLine', issue);
+
    return (
       <div
          // href={`/lndev-ui/issue/${issue.identifier}`}
