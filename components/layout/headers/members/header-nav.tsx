@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { users } from '@/mock-data/users';
 import { Plus } from 'lucide-react';
-import { ThemeToggle } from '../../theme-toggle';
 
 export default function HeaderNav() {
    const [userCount, setUserCount] = useState<number | null>(null);
@@ -30,7 +29,6 @@ export default function HeaderNav() {
             </div>
          </div>
          <div className="flex items-center gap-2">
-            <ThemeToggle />
             <Button className="relative" size="xs" variant="secondary">
                <Plus className="size-4" />
                Invite
