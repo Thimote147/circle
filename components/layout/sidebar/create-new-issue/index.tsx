@@ -24,6 +24,8 @@ export function CreateNewIssue() {
    const { isOpen, defaultStatus, openModal, closeModal } = useCreateIssueStore();
    const { addIssue, getAllIssues } = useIssuesStore();
 
+   const [loading, setLoading] = useState(true);
+
    const createDefaultData = useCallback(async () => {
       const generateUniqueIdentifier = async () => {
          const identifiers = (await getAllIssues()).map((issue) => issue.identifier);
@@ -45,7 +47,7 @@ export function CreateNewIssue() {
          identifier: `LNUI-${identifier}`,
          title: '',
          description: '',
-         status: (await status).find((s) => s.status_id === 5)!,
+         status: defaultStatus || (await status).find((s) => s.status_id === 5)!,
          assignees: null,
          priority: (await priorities).find((p) => p.priority_id === 1)!,
          labels: [],
@@ -54,13 +56,16 @@ export function CreateNewIssue() {
          project: undefined,
          subissues: [],
       };
-   }, [getAllIssues]);
+   }, [defaultStatus, getAllIssues]);
 
    const [addIssueForm, setAddIssueForm] = useState<Issue | null>(null);
 
    useEffect(() => {
       const fetchDefaultData = async () => {
-         setAddIssueForm(await createDefaultData());
+         setLoading(true);
+         const data = await createDefaultData();
+         setAddIssueForm(data);
+         setLoading(false);
       };
       fetchDefaultData();
    }, [defaultStatus, createDefaultData]);
@@ -78,7 +83,17 @@ export function CreateNewIssue() {
       setAddIssueForm(await createDefaultData());
    };
 
-   if (!addIssueForm) return null;
+   if (loading || !addIssueForm) {
+      return (
+         <Dialog open={!isOpen} onOpenChange={(value) => (value ? openModal() : closeModal())}>
+            <DialogTrigger asChild>
+               <Button className="size-8 shrink-0" variant="secondary" size="icon">
+                  <RiEditLine />
+               </Button>
+            </DialogTrigger>
+         </Dialog>
+      );
+   }
 
    return (
       <Dialog open={isOpen} onOpenChange={(value) => (value ? openModal() : closeModal())}>
