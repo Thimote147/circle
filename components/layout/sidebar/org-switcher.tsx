@@ -33,10 +33,10 @@ export function OrgSwitcher() {
                         className="h-8 p-1 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                      >
                         <div className="flex aspect-square size-6 items-center justify-center rounded bg-orange-500 text-sidebar-primary-foreground">
-                           LN
+                           RB
                         </div>
                         <div className="grid flex-1 text-left text-sm leading-tight">
-                           <span className="truncate font-semibold">lndev-ui</span>
+                           <span className="truncate font-semibold">RB-Tech-SA</span>
                         </div>
                         <ChevronsUpDown className="ml-auto" />
                      </SidebarMenuButton>
@@ -68,13 +68,13 @@ export function OrgSwitcher() {
                      <DropdownMenuSubTrigger>Switch Workspace</DropdownMenuSubTrigger>
                      <DropdownMenuPortal>
                         <DropdownMenuSubContent>
-                           <DropdownMenuLabel>leonelngoya@gmail.com</DropdownMenuLabel>
+                           <DropdownMenuLabel>contact@rbtechsa.com</DropdownMenuLabel>
                            <DropdownMenuSeparator />
                            <DropdownMenuItem>
                               <div className="flex aspect-square size-6 items-center justify-center rounded bg-orange-500 text-sidebar-primary-foreground">
-                                 LN
+                                 RB
                               </div>
-                              lndev-ui
+                              RB-Tech-SA
                            </DropdownMenuItem>
                            <DropdownMenuSeparator />
                            <DropdownMenuItem>Create or join workspace</DropdownMenuItem>

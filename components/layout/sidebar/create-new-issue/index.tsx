@@ -134,7 +134,7 @@ export function CreateNewIssue() {
                      }
                   />
                   <AssigneeSelector
-                     assignee={addIssueForm.assignees}
+                     assignees={addIssueForm.assignees}
                      onChange={(newAssignee) =>
                         setAddIssueForm({ ...addIssueForm, assignees: newAssignee })
                      }

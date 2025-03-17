@@ -17,26 +17,27 @@ import { useEffect, useId, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface AssigneeSelectorProps {
-   assignee: User | null;
-   onChange: (assignee: User | null) => void;
+   assignees: User[] | null;
+   onChange: (assignee: User[] | null) => void;
 }
 
-export function AssigneeSelector({ assignee, onChange }: AssigneeSelectorProps) {
+export function AssigneeSelector({ assignees, onChange }: AssigneeSelectorProps) {
    const id = useId();
    const [open, setOpen] = useState(false);
-   const [value, setValue] = useState<number | null>(assignee?.user_id || null);
+   const [value, setValue] = useState<number | null>(
+      assignees && assignees.length > 0 ? assignees[0].user_id : null
+   );
    const [users, setUsers] = useState<User[]>([]);
 
    const { filterByAssignee } = useIssuesStore();
 
    useEffect(() => {
-      setValue(assignee?.user_id || null);
-   }, [assignee]);
+      setValue(assignees && assignees.length > 0 ? assignees[0].user_id : null);
+   }, [assignees]);
 
    useEffect(() => {
-      // Simuler le chargement des utilisateurs
       const loadUsers = async () => {
-         const data = await fetchUsers; // Assure-toi que fetchUsers est une promesse
+         const data = await fetchUsers;
          setUsers(data);
       };
       loadUsers();
@@ -45,7 +46,7 @@ export function AssigneeSelector({ assignee, onChange }: AssigneeSelectorProps) 
    const handleAssigneeChange = (userId: number | null) => {
       const selectedUser = users.find((u) => u.user_id === userId) || null;
       setValue(userId);
-      onChange(selectedUser);
+      onChange(selectedUser ? [selectedUser] : null);
       setOpen(false);
    };
 

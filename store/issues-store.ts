@@ -33,7 +33,7 @@ interface IssuesState {
    updateIssuePriority: (issueId: number, newPriority: Priority) => void;
 
    // Assignee management
-   updateIssueAssignee: (issueId: number, newAssignee: User | null) => void;
+   updateIssueAssignee: (issueId: number, newAssignee: User[] | null) => void;
 
    // Labels management
    addIssueLabel: (issueId: number, label: LabelInterface) => void;
@@ -139,7 +139,9 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
       if (userId === null) {
          return get().issues.filter((issue) => issue.assignees === null);
       }
-      return get().issues.filter((issue) => issue.assignees?.user_id === userId);
+      return get().issues.filter(
+         (issue) => issue.assignees && issue.assignees[0]?.user_id === userId
+      );
    },
 
    filterByLabel: (labelId: number) => {
@@ -172,7 +174,7 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
    },
 
    // Assignee management
-   updateIssueAssignee: (issueId: number, newAssignee: User | null) => {
+   updateIssueAssignee: (issueId: number, newAssignee: User[] | null) => {
       get().updateIssue(issueId, { assignees: newAssignee });
    },
 

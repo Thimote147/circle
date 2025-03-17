@@ -12,7 +12,7 @@ import { motion } from 'motion/react';
 export function IssueLine({ issue, layoutId = false }: { issue: Issue; layoutId?: boolean }) {
    return (
       <motion.div
-         //href={`/lndev-ui/issue/${issue.identifier}`}
+         //href={`/rb-tech-sa/issue/${issue.identifier}`}
          {...(layoutId && { layoutId: `issue-line-${issue.identifier}` })}
          className="w-full flex items-center justify-start h-11 px-6 hover:bg-sidebar/50"
       >
