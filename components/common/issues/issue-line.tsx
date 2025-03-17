@@ -8,6 +8,7 @@ import { PrioritySelector } from './priority-selector';
 import { ProjectBadge } from './project-badge';
 import { StatusSelector } from './status-selector';
 import { motion } from 'motion/react';
+import { fr } from 'date-fns/locale';
 
 export function IssueLine({ issue, layoutId = false }: { issue: Issue; layoutId?: boolean }) {
    return (
@@ -35,7 +36,7 @@ export function IssueLine({ issue, layoutId = false }: { issue: Issue; layoutId?
                {issue.project && <ProjectBadge project={issue.project} />}
             </div>
             <span className="text-xs text-muted-foreground shrink-0 hidden sm:inline-block">
-               {format(new Date(issue.createdAt), 'MMM dd')}
+               {format(new Date(issue.createdAt), 'dd MMMM', { locale: fr })}
             </span>
             <AssigneeUser user={issue.assignees} />
          </div>

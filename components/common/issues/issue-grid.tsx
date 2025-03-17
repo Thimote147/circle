@@ -11,6 +11,7 @@ import { LabelBadge } from './label-badge';
 import { PrioritySelector } from './priority-selector';
 import { ProjectBadge } from './project-badge';
 import { StatusSelector } from './status-selector';
+import { fr } from 'date-fns/locale';
 
 export const IssueDragType = 'ISSUE';
 type IssueGridProps = {
@@ -121,7 +122,7 @@ export function IssueGrid({ issue }: IssueGridProps) {
 
          <div className="flex items-center justify-between mt-auto pt-2">
             <span className="text-xs text-muted-foreground">
-               {format(new Date(issue.createdAt), 'MMM dd')}
+               {format(new Date(issue.createdAt), 'dd MMMM', { locale: fr })}
             </span>
             <AssigneeUser user={issue.assignees} />
          </div>
