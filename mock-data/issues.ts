@@ -12,7 +12,7 @@ export interface Issue {
    title: string;
    description: string;
    status: Status;
-   assignees: User | null;
+   assignees: User[] | null;
    priority: Priority;
    labels: LabelInterface[];
    createdAt: string;
@@ -81,7 +81,7 @@ export async function sortIssuesByPriority(issues: Issue[]): Promise<Issue[]> {
          priorityOrder[priority.priority_id] = 2;
       } else if (priority.name === 'Low') {
          priorityOrder[priority.priority_id] = 3;
-      } else if (priority.name === 'No Priority') {
+      } else if (priority.name === 'No priority') {
          priorityOrder[priority.priority_id] = 4;
       }
    });
