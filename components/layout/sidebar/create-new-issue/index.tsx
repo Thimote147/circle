@@ -18,30 +18,28 @@ import { PrioritySelector } from './priority-selector';
 import { AssigneeSelector } from './assignee-selector';
 import { ProjectSelector } from './project-selector';
 import { LabelSelector } from './label-selector';
+import { ranks } from '@/mock-data/issues';
 
 export function CreateNewIssue() {
    const [createMore, setCreateMore] = useState<boolean>(false);
    const { isOpen, defaultStatus, openModal, closeModal } = useCreateIssueStore();
    const { addIssue, getAllIssues } = useIssuesStore();
 
-   const [loading, setLoading] = useState(true);
-
-   const createDefaultData = useCallback(async () => {
-      const generateUniqueIdentifier = async () => {
-         const identifiers = (await getAllIssues()).map((issue) => issue.identifier);
-         let identifier = Math.floor(Math.random() * 999)
+   const generateUniqueIdentifier = useCallback(async () => {
+      const identifiers = (await getAllIssues()).map((issue) => issue.identifier);
+      let identifier = Math.floor(Math.random() * 999)
+         .toString()
+         .padStart(3, '0');
+      while (identifiers.includes(`LNUI-${identifier}`)) {
+         identifier = Math.floor(Math.random() * 999)
             .toString()
             .padStart(3, '0');
-         while (identifiers.includes(`LNUI-${identifier}`)) {
-            identifier = Math.floor(Math.random() * 999)
-               .toString()
-               .padStart(3, '0');
-         }
-         return identifier;
-      };
+      }
+      return identifier;
+   }, [getAllIssues]);
 
-      const identifier = await generateUniqueIdentifier();
-
+   const createDefaultData = useCallback(async () => {
+      const identifier = generateUniqueIdentifier();
       return {
          issue_id: 0,
          identifier: `LNUI-${identifier}`,
@@ -55,20 +53,15 @@ export function CreateNewIssue() {
          cycleId: 1,
          project: undefined,
          subissues: [],
+         rank: ranks[ranks.length - 1],
       };
-   }, [defaultStatus, getAllIssues]);
+   }, [defaultStatus, generateUniqueIdentifier]);
 
    const [addIssueForm, setAddIssueForm] = useState<Issue | null>(null);
 
    useEffect(() => {
-      const fetchDefaultData = async () => {
-         setLoading(true);
-         const data = await createDefaultData();
-         setAddIssueForm(data);
-         setLoading(false);
-      };
-      fetchDefaultData();
-   }, [defaultStatus, createDefaultData]);
+      createDefaultData().then(setAddIssueForm);
+   }, [createDefaultData]);
 
    const createIssue = async () => {
       if (!addIssueForm?.title) {
@@ -83,7 +76,7 @@ export function CreateNewIssue() {
       setAddIssueForm(await createDefaultData());
    };
 
-   if (loading || !addIssueForm) {
+   if (!addIssueForm) {
       return (
          <Dialog open={!isOpen} onOpenChange={(value) => (value ? openModal() : closeModal())}>
             <DialogTrigger asChild>

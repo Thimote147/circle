@@ -12,10 +12,8 @@ interface IssuesState {
    issues: Issue[];
    issuesByStatus: Record<string, Issue[]>;
 
-   //
-   getAllIssues: () => Promise<Issue[]>;
-
    // Actions
+   getAllIssues: () => Promise<Issue[]>;
    addIssue: (issue: Issue) => void;
    updateIssue: (id: number, updatedIssue: Partial<Issue>) => void;
    deleteIssue: (id: number) => void;
@@ -53,18 +51,16 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
    issues: [],
    issuesByStatus: {},
 
-   //
+   // Actions
    getAllIssues: async () => {
       const { data, error } = await supabase.rpc('get_issues').select('*');
       if (error) {
          console.error('Error fetching issues:', error);
          return [];
       }
-
       return data as Issue[];
    },
 
-   // Actions
    addIssue: async (issue: Issue) => {
       const { error, data } = await supabase.rpc('insert_issue', {
          p_identifier: issue.identifier,
@@ -211,8 +207,10 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
 // Initialize issues after store creation
 const initializeStore = async () => {
    const receivedIssues = await mockIssues;
-   useIssuesStore.getState().issues = receivedIssues;
-   useIssuesStore.getState().issuesByStatus = groupIssuesByStatus(receivedIssues);
+   useIssuesStore.setState({
+      issues: receivedIssues,
+      issuesByStatus: groupIssuesByStatus(receivedIssues),
+   });
 };
 
 initializeStore();
