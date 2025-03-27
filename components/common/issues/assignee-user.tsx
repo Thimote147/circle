@@ -14,12 +14,14 @@ import { CheckIcon, CircleUserRound, Send, UserIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface AssigneeUserProps {
-   user: User | null;
+   user: User[] | null;
 }
 
 export function AssigneeUser({ user }: AssigneeUserProps) {
    const [open, setOpen] = useState(false);
-   const [currentAssignee, setCurrentAssignee] = useState<User | null>(user);
+   const [currentAssignee, setCurrentAssignee] = useState<User | null>(
+      user && user.length > 0 ? user[0] : null
+   );
    const [userList, setUserList] = useState<User[]>([]);
 
    useEffect(() => {
@@ -36,10 +38,15 @@ export function AssigneeUser({ user }: AssigneeUserProps) {
       if (currentAssignee) {
          return (
             <Avatar className="size-6 shrink-0">
-               {currentAssignee.avatarUrl ? (
+               {userList.find((u) => u.user_id === currentAssignee.user_id)?.avatarUrl ? (
                   <>
-                     <AvatarImage src={currentAssignee.avatarUrl} alt={currentAssignee.username} />
-                     <AvatarFallback>{currentAssignee.username}</AvatarFallback>
+                     <AvatarImage
+                        src={userList.find((u) => u.user_id === currentAssignee.user_id)!.avatarUrl}
+                        alt={userList.find((u) => u.user_id === currentAssignee.user_id)!.avatarUrl}
+                     />
+                     <AvatarFallback>
+                        {userList.find((u) => u.user_id === currentAssignee.user_id)!.avatarUrl}
+                     </AvatarFallback>
                   </>
                ) : (
                   <CircleUserRound className="size-5 text-zinc-600" />

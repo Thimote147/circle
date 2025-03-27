@@ -31,17 +31,17 @@ const data = {
    workspace: [
       {
          name: 'Teams',
-         url: '/lndev-ui/teams',
+         url: '/rb-tech-sa/teams',
          icon: ContactRound,
       },
       {
          name: 'Projects',
-         url: '/lndev-ui/projects',
+         url: '/rb-tech-sa/projects',
          icon: Box,
       },
       {
          name: 'Members',
-         url: '/lndev-ui/members',
+         url: '/rb-tech-sa/members',
          icon: UserRound,
       },
    ],

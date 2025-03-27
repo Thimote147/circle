@@ -31,7 +31,7 @@ export function TeamsTooltip({ teams }: TeamsTooltipProps) {
                ))}
             {teams && teams.length > 2 && <span className="mt-0.5">+ {teams.length - 2}</span>}
          </TooltipTrigger>
-         <TooltipContent sideOffset={8} className="p-2">
+         <TooltipContent className="p-2">
             <div className="flex flex-col gap-1">
                {filteredTeams.map((team) => (
                   <div key={team.team_id} className="text-xs flex items-center gap-2">

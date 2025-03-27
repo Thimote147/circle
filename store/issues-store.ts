@@ -12,10 +12,8 @@ interface IssuesState {
    issues: Issue[];
    issuesByStatus: Record<string, Issue[]>;
 
-   //
-   getAllIssues: () => Promise<Issue[]>;
-
    // Actions
+   getAllIssues: () => Promise<Issue[]>;
    addIssue: (issue: Issue) => void;
    updateIssue: (id: number, updatedIssue: Partial<Issue>) => void;
    deleteIssue: (id: number) => void;
@@ -35,7 +33,7 @@ interface IssuesState {
    updateIssuePriority: (issueId: number, newPriority: Priority) => void;
 
    // Assignee management
-   updateIssueAssignee: (issueId: number, newAssignee: User | null) => void;
+   updateIssueAssignee: (issueId: number, newAssignee: User[] | null) => void;
 
    // Labels management
    addIssueLabel: (issueId: number, label: LabelInterface) => void;
@@ -53,18 +51,16 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
    issues: [],
    issuesByStatus: {},
 
-   //
+   // Actions
    getAllIssues: async () => {
       const { data, error } = await supabase.rpc('get_issues').select('*');
       if (error) {
          console.error('Error fetching issues:', error);
          return [];
       }
-
       return data as Issue[];
    },
 
-   // Actions
    addIssue: async (issue: Issue) => {
       const { error, data } = await supabase.rpc('insert_issue', {
          p_identifier: issue.identifier,
@@ -143,7 +139,9 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
       if (userId === null) {
          return get().issues.filter((issue) => issue.assignees === null);
       }
-      return get().issues.filter((issue) => issue.assignees?.user_id === userId);
+      return get().issues.filter(
+         (issue) => issue.assignees && issue.assignees[0]?.user_id === userId
+      );
    },
 
    filterByLabel: (labelId: number) => {
@@ -176,7 +174,7 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
    },
 
    // Assignee management
-   updateIssueAssignee: (issueId: number, newAssignee: User | null) => {
+   updateIssueAssignee: (issueId: number, newAssignee: User[] | null) => {
       get().updateIssue(issueId, { assignees: newAssignee });
    },
 
@@ -211,8 +209,10 @@ export const useIssuesStore = create<IssuesState>((set, get) => ({
 // Initialize issues after store creation
 const initializeStore = async () => {
    const receivedIssues = await mockIssues;
-   useIssuesStore.getState().issues = receivedIssues;
-   useIssuesStore.getState().issuesByStatus = groupIssuesByStatus(receivedIssues);
+   useIssuesStore.setState({
+      issues: receivedIssues,
+      issuesByStatus: groupIssuesByStatus(receivedIssues),
+   });
 };
 
 initializeStore();

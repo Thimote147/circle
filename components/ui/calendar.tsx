@@ -2,10 +2,16 @@
 
 import * as React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, CustomComponents } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
+
+interface ExtendedCustomComponents extends CustomComponents {
+   Button: React.ComponentType<
+      { className?: string } & React.ButtonHTMLAttributes<HTMLButtonElement>
+   >;
+}
 
 function Calendar({
    className,
@@ -56,20 +62,22 @@ function Calendar({
             day_hidden: 'invisible',
             ...classNames,
          }}
-         components={{
-            Button: ({ className, ...props }) => (
-               <button
-                  {...props}
-                  className={cn('size-7 flex items-center justify-center', className)}
-               >
-                  {className?.includes('next') ? (
-                     <ChevronRight className="size-4" />
-                  ) : (
-                     <ChevronLeft className="size-4" />
-                  )}
-               </button>
-            ),
-         }}
+         components={
+            {
+               Button: ({ className, ...props }) => (
+                  <button
+                     {...props}
+                     className={cn('size-7 flex items-center justify-center', className)}
+                  >
+                     {className?.includes('next') ? (
+                        <ChevronRight className="size-4" />
+                     ) : (
+                        <ChevronLeft className="size-4" />
+                     )}
+                  </button>
+               ),
+            } as ExtendedCustomComponents
+         }
          {...props}
       />
    );

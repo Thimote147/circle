@@ -98,7 +98,7 @@ export function NavTeams({ items }: { items: Team[] }) {
                         <SidebarMenuSub>
                            <SidebarMenuSubItem>
                               <SidebarMenuSubButton asChild>
-                                 <Link href="/lndev-ui/team/CORE/all">
+                                 <Link href="/rb-tech-sa/team/CORE/all">
                                     <CopyMinus size={14} />
                                     <span>Issues</span>
                                  </Link>
@@ -106,7 +106,7 @@ export function NavTeams({ items }: { items: Team[] }) {
                            </SidebarMenuSubItem>
                            <SidebarMenuSubItem>
                               <SidebarMenuSubButton asChild>
-                                 <Link href="/lndev-ui/team/CORE/all">
+                                 <Link href="/rb-tech-sa/team/CORE/all">
                                     <RiDonutChartFill size={14} />
                                     <span>Cycles</span>
                                  </Link>
@@ -114,7 +114,7 @@ export function NavTeams({ items }: { items: Team[] }) {
                            </SidebarMenuSubItem>
                            <SidebarMenuSubItem>
                               <SidebarMenuSubButton asChild>
-                                 <Link href="/lndev-ui/projects">
+                                 <Link href="/rb-tech-sa/projects">
                                     <Box size={14} />
                                     <span>Projects</span>
                                  </Link>

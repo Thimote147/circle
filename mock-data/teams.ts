@@ -13,20 +13,13 @@ export interface Team {
 }
 
 const fetchTeams = async () => {
-   const { data, error } = await supabase.from('teams').select('*');
+   const { data, error } = await supabase.rpc('get_teams');
    if (error) {
       console.error('Error fetching teams:', error);
       return [];
    }
 
-   // Transform the data to match the expected structure
-   const transformedData = data.map((team: Team) => ({
-      ...team,
-      members: [],
-      projects: [],
-   }));
-
-   return transformedData as Team[];
+   return data as Team[];
 };
 
 export const teams: Promise<Team[]> = fetchTeams();

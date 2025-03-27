@@ -3,7 +3,7 @@ export interface Cycle {
    number: number;
    name: string;
    teamId: string;
-   startDate: string;
+   start_date: string;
    endDate: string;
    progress: number;
 }
@@ -14,7 +14,7 @@ export const cycles: Cycle[] = [
       number: 42,
       name: 'Sprint 42 - Pixel Perfect',
       teamId: 'design-system',
-      startDate: '2025-03-10',
+      start_date: '2025-03-10',
       endDate: '2025-03-24',
       progress: 80,
    },
@@ -23,7 +23,7 @@ export const cycles: Cycle[] = [
       number: 43,
       name: 'Sprint 43 - Performance Boost',
       teamId: 'performance-lab',
-      startDate: '2025-03-10',
+      start_date: '2025-03-10',
       endDate: '2025-03-24',
       progress: 50,
    },
@@ -32,7 +32,7 @@ export const cycles: Cycle[] = [
       number: 44,
       name: 'Sprint 44 - Core Enhancements',
       teamId: 'lndev-core',
-      startDate: '2025-03-10',
+      start_date: '2025-03-10',
       endDate: '2025-03-24',
       progress: 0,
    },

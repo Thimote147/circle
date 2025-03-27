@@ -7,13 +7,14 @@ import { LabelBadge } from './label-badge';
 import { PrioritySelector } from './priority-selector';
 import { ProjectBadge } from './project-badge';
 import { StatusSelector } from './status-selector';
+import { motion } from 'motion/react';
+import { fr } from 'date-fns/locale';
 
-export function IssueLine({ issue }: { issue: Issue }) {
-   console.log('IssueLine', issue);
-
+export function IssueLine({ issue, layoutId = false }: { issue: Issue; layoutId?: boolean }) {
    return (
-      <div
-         // href={`/lndev-ui/issue/${issue.identifier}`}
+      <motion.div
+         //href={`/rb-tech-sa/issue/${issue.identifier}`}
+         {...(layoutId && { layoutId: `issue-line-${issue.identifier}` })}
          className="w-full flex items-center justify-start h-11 px-6 hover:bg-sidebar/50"
       >
          <div className="flex items-center gap-0.5">
@@ -35,10 +36,10 @@ export function IssueLine({ issue }: { issue: Issue }) {
                {issue.project && <ProjectBadge project={issue.project} />}
             </div>
             <span className="text-xs text-muted-foreground shrink-0 hidden sm:inline-block">
-               {format(new Date(issue.createdAt), 'MMM dd')}
+               {format(new Date(issue.createdAt), 'dd MMMM', { locale: fr })}
             </span>
             <AssigneeUser user={issue.assignees} />
          </div>
-      </div>
+      </motion.div>
    );
 }
