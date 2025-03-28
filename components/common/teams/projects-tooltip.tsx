@@ -1,8 +1,10 @@
 'use client';
 
+import React from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Project } from '@/mock-data/projects';
 import * as Icons from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 import {
    BacklogIcon,
    PausedIcon,
@@ -26,10 +28,6 @@ const iconMap: { [key: string]: React.FC } = {
 };
 
 export function ProjectsTooltip({ projects }: ProjectsTooltipProps) {
-   const isValidIcon = (icon: string): icon is keyof typeof Icons => {
-      return icon in Icons;
-   };
-
    return (
       <TooltipProvider>
          <Tooltip>
@@ -42,17 +40,24 @@ export function ProjectsTooltip({ projects }: ProjectsTooltipProps) {
             <TooltipContent className="p-2">
                <div className="flex flex-col gap-1">
                   {projects.map((project, index) => {
-                     const ProjectIcon = isValidIcon(project.icon)
-                        ? Icons[project.icon]
-                        : Icons.Box;
-                     const StatusIcon =
-                        iconMap[project.status.icon as keyof typeof iconMap] || Icons.Circle;
+                     let ProjectIcon: LucideIcon = Icons.Box;
+                     const iconName = String(project.icon);
+                     if (typeof iconName === 'string' && iconName in Icons) {
+                        ProjectIcon = Icons[iconName as keyof typeof Icons] as LucideIcon;
+                     }
+
+                     const StatusIconComponent =
+                        typeof project.status.icon === 'string' &&
+                        Object.keys(iconMap).includes(project.status.icon)
+                           ? iconMap[project.status.icon]
+                           : Icons.Circle;
+
                      return (
                         <div key={index} className="flex items-center gap-1.5">
                            <ProjectIcon className="size-4 shrink-0" />
                            <span className="text-sm w-full text-left">{project?.name}</span>
                            <div className="shrink-0">
-                              <StatusIcon />
+                              <StatusIconComponent />
                            </div>
                         </div>
                      );

@@ -11,7 +11,7 @@ interface ProjectLineProps {
 }
 
 export default function ProjectLine({ project }: ProjectLineProps) {
-   const IconComponent = Icons[project.icon as keyof typeof Icons] as LucideIcon;
+   const IconComponent = Icons[project.icon as unknown as keyof typeof Icons] as Icons.LucideIcon;
 
    return (
       <div className="w-full flex items-center py-3 px-6 border-b hover:bg-sidebar/50 border-muted-foreground/5 text-sm">

@@ -30,7 +30,7 @@ export function HealthPopover({ project }: HealthPopoverProps) {
 
    const isMobile = useIsMobile();
 
-   const IconComponent = Icons[project.icon as keyof typeof Icons] as LucideIcon;
+   const IconComponent = Icons[project.icon as unknown as keyof typeof Icons] as LucideIcon;
 
    return (
       <Popover>
