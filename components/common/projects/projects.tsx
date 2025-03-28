@@ -6,13 +6,11 @@ import ProjectLine from '@/components/common/projects/project-line';
 
 export default function Projects() {
    const [projectList, setProjectList] = useState<Project[]>([]);
-   const [loading, setLoading] = useState(true);
 
    useEffect(() => {
       const fetchProjects = async () => {
          const getProjects = await projects;
          setProjectList(getProjects);
-         setLoading(false);
       };
 
       fetchProjects();
