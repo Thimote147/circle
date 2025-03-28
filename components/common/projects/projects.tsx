@@ -11,7 +11,6 @@ export default function Projects() {
       const fetchProjects = async () => {
          const getProjects = await projects;
          setProjectList(getProjects);
-         setLoading(false);
       };
 
       fetchProjects();
