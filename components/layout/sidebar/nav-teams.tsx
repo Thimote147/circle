@@ -32,11 +32,20 @@ import {
    SidebarMenuSubButton,
    SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { teams } from '@/mock-data/teams';
+import { Team, teams } from '@/mock-data/teams';
 import { RiDonutChartFill } from '@remixicon/react';
+import { useEffect, useState } from 'react';
 
-export function NavTeams() {
-   const joinedTeams = teams.filter((t) => t.joined);
+const NavTeams = () => {
+   const [joinedTeams, setJoinedTeams] = useState<Team[]>([]);
+
+   useEffect(() => {
+      const fetchTeams = async () => {
+         const data = await teams;
+         setJoinedTeams(data);
+      };
+      fetchTeams();
+   }, []);
    return (
       <SidebarGroup>
          <SidebarGroupLabel>Your teams</SidebarGroupLabel>
@@ -139,4 +148,6 @@ export function NavTeams() {
          </SidebarMenu>
       </SidebarGroup>
    );
-}
+};
+
+export default NavTeams;

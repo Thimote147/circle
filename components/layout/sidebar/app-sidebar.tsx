@@ -1,11 +1,9 @@
 'use client';
 
 import { RiGithubLine } from '@remixicon/react';
-import * as React from 'react';
-
 import { HelpButton } from '@/components/layout/sidebar/help-button';
 import { NavInbox } from '@/components/layout/sidebar/nav-inbox';
-import { NavTeams } from '@/components/layout/sidebar/nav-teams';
+import NavTeams from '@/components/layout/sidebar/nav-teams';
 import { NavWorkspace } from '@/components/layout/sidebar/nav-workspace';
 import { NavAccount } from '@/components/layout/sidebar/nav-account';
 import { NavFeatures } from '@/components/layout/sidebar/nav-features';
@@ -15,9 +13,9 @@ import { Button } from '@/components/ui/button';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
 import { Team, teams } from '@/mock-data/teams';
 import Link from 'next/link';
-import { X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { BackToApp } from '@/components/layout/sidebar/back-to-app';
+import { useEffect, useState } from 'react';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
    const [teamList, setTeamList] = useState<Team[]>([]);
@@ -49,9 +47,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <NavTeams />
                </>
             )}
-            <NavInbox inbox={data.inbox} />
-            <NavWorkspace workspace={data.workspace} />
-            <NavTeams items={teamList.filter((t) => t.joined)} />
          </SidebarContent>
          <SidebarFooter>
             <div className="w-full flex flex-col gap-2">

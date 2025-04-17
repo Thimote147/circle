@@ -10,19 +10,19 @@ import {
    SidebarMenuButton,
    SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { teams } from '@/mock-data/teams';
+import { Team, teams } from '@/mock-data/teams';
 import { Button } from '@/components/ui/button';
 
-export function NavTeamsSettings() {
-   const joinedTeams = teams.filter((t) => t.joined);
+export async function NavTeamsSettings() {
+   const joinedTeams = (await teams).filter((t) => t.joined);
    return (
       <SidebarGroup>
          <SidebarGroupLabel>Your teams</SidebarGroupLabel>
          <SidebarMenu>
-            {joinedTeams.map((team) => (
-               <SidebarMenuItem key={team.id}>
+            {joinedTeams.map((team: Team) => (
+               <SidebarMenuItem key={team.team_id}>
                   <SidebarMenuButton asChild>
-                     <Link href={`/settings/teams/${team.id}`}>
+                     <Link href={`/settings/teams/${team.team_id}`}>
                         <div className="inline-flex size-6 bg-muted/50 items-center justify-center rounded shrink-0">
                            <div className="text-sm">{team.icon}</div>
                         </div>
