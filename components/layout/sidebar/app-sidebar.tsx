@@ -11,23 +11,11 @@ import { NavTeamsSettings } from '@/components/layout/sidebar/nav-teams-settings
 import { OrgSwitcher } from '@/components/layout/sidebar/org-switcher';
 import { Button } from '@/components/ui/button';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
-import { Team, teams } from '@/mock-data/teams';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BackToApp } from '@/components/layout/sidebar/back-to-app';
-import { useEffect, useState } from 'react';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-   const [teamList, setTeamList] = useState<Team[]>([]);
-
-   useEffect(() => {
-      const fetchTeams = async () => {
-         const data = await teams;
-         setTeamList(data);
-      };
-      fetchTeams();
-   }, []);
-
    const pathname = usePathname();
    const isSettings = pathname.includes('/settings');
    return (
