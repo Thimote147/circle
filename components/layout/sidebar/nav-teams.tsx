@@ -32,15 +32,16 @@ import {
    SidebarMenuSubButton,
    SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { Team } from '@/mock-data/teams';
+import { teams } from '@/mock-data/teams';
 import { RiDonutChartFill } from '@remixicon/react';
 
-export function NavTeams({ items }: { items: Team[] }) {
+export function NavTeams() {
+   const joinedTeams = teams.filter((t) => t.joined);
    return (
       <SidebarGroup>
          <SidebarGroupLabel>Your teams</SidebarGroupLabel>
          <SidebarMenu>
-            {items.map((item, index) => (
+            {joinedTeams.map((item, index) => (
                <Collapsible
                   key={item.name}
                   asChild
@@ -59,9 +60,11 @@ export function NavTeams({ items }: { items: Team[] }) {
                            </span>
                            <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                 <SidebarMenuAction showOnHover>
-                                    <MoreHorizontal />
-                                    <span className="sr-only">More</span>
+                                 <SidebarMenuAction asChild showOnHover>
+                                    <div>
+                                       <MoreHorizontal />
+                                       <span className="sr-only">More</span>
+                                    </div>
                                  </SidebarMenuAction>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent
